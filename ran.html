@@ -20,11 +20,6 @@
       margin: auto;
       max-width: 500px;
     }
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
     .form-range {
       width: 80%;
       margin: 15px auto;
@@ -44,19 +39,10 @@
   </nav>
 
   <div class="loan-box">
-    <h4>Select your loan range</h4>
-    <!-- Dropdown to select range type -->
-    <select id="loanRangeType" onchange="updateSlider()">
-      <option value="small">Small Range</option>
-      <option value="large">Large Range</option>
-    </select>
-    
-    <h4>Select the loan amount</h4>
-    <!-- Loan slider -->
-    <input type="range" class="form-range" id="loanRange" value="1000">
+    <h4>Select your loan amount</h4>
+    <input type="range" class="form-range" id="loanRange" min="1000" max="10000" step="10">
     <p>Loan amount: <span id="loanValue">KES 1000</span></p>
     <p>Settlement amount: <span id="settlementAmount">KES 1250</span></p>
-    <!-- Message to show allowed maximum if user reaches or attempts to exceed it -->
     <p id="rangeMessage"></p>
     
     <button class="btn btn-warning w-100" onclick="storeLoanData()">Apply for a loan</button>
@@ -67,80 +53,37 @@
   </footer>
 
   <script>
-    let allowedMax = 0; // Global variable to hold the allowed maximum
+    let allowedMax = Math.floor(Math.random() * (10000 - 1500 + 1)) + 1500; // Random max between 1500 and 10000
 
-    // Function to update the slider based on selected range type
-    function updateSlider() {
-      const rangeType = document.getElementById("loanRangeType").value;
-      const slider = document.getElementById("loanRange");
-      let min, max, initialValue;
-      
-      if (rangeType === "small") {
-        // Random allowed maximum from the small range values array
-        const allowedMaxArray = [1500, 2100, 3000, 4540];
-        allowedMax = allowedMaxArray[Math.floor(Math.random() * allowedMaxArray.length)];
-        min = 1000;
-        // Ensure that max attribute is not lower than the min value.
-        max = allowedMax;
-        initialValue = min;
-      } else if (rangeType === "large") {
-        // Define large range allowed maximum values
-        const allowedMaxArrayLarge = [5000, 7000, 10000];
-        allowedMax = allowedMaxArrayLarge[Math.floor(Math.random() * allowedMaxArrayLarge.length)];
-        min = 3001;
-        max = allowedMax;
-        initialValue = min;
-      }
-      
-      // Update slider attributes
-      slider.min = min;
-      slider.max = max;
-      slider.value = initialValue;
-      document.getElementById("loanValue").textContent = "KES " + initialValue;
-      document.getElementById("settlementAmount").textContent = "KES " + (parseInt(initialValue) * 1.25);
-      document.getElementById("rangeMessage").textContent = "";
-    }
-    
-    // Event listener to update values when slider is used.
+    document.getElementById("loanRange").max = allowedMax; // Limit slider to user's random max
+
     document.getElementById("loanRange").addEventListener('input', function() {
       let value = parseInt(this.value);
       
-      // If the user reaches the allowed maximum, show a message.
-      if (value >= allowedMax) {
-        document.getElementById("rangeMessage").textContent = "Your range is up to KSH " + allowedMax;
+      if (value > allowedMax) {
+        document.getElementById("rangeMessage").textContent = "Your maximum loan limit is KES " + allowedMax;
+        this.value = allowedMax;
+        value = allowedMax;
       } else {
         document.getElementById("rangeMessage").textContent = "";
       }
-      
+
       document.getElementById("loanValue").textContent = "KES " + value;
       document.getElementById("settlementAmount").textContent = "KES " + (value * 1.25);
     });
-    
-    // Initialize slider on page load with the default type ("small")
-    updateSlider();
 
     function storeLoanData() {
       let loanAmount = document.getElementById("loanRange").value;
       let settlementAmount = parseInt(loanAmount) * 1.25;
-      let savingsAmount;
-      
-      // Calculate a savings amount based on the loan range
-      if (loanAmount >= 1000 && loanAmount <= 3000) {
-        savingsAmount = Math.floor(Math.random() * (120 - 95 + 1)) + 95;
-      } else if (loanAmount >= 3001 && loanAmount <= allowedMax) {
-        savingsAmount = Math.floor(Math.random() * (215 - 145 + 1)) + 145;
-      } else {
-        savingsAmount = 0;
-      }
-      
-      // Store data in localStorage
+      let savingsAmount = Math.floor(Math.random() * (300 - 100 + 1)) + 100; // Random savings requirement
+
       localStorage.setItem("loanAmount", loanAmount);
       localStorage.setItem("settlementAmount", settlementAmount);
       localStorage.setItem("savingsAmount", savingsAmount);
-      
-      // Redirect to the payment page
+
       window.location.href = 'payment.html';
     }
   </script>
 </body>
 </html>
+
