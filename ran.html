@@ -40,7 +40,7 @@
 
   <div class="loan-box">
     <h4>Select your loan amount</h4>
-    <input type="range" class="form-range" id="loanRange" min="1000" max="10000" step="10">
+    <input type="range" class="form-range" id="loanRange" min="1000" max="10000" step="10" value="1000">
     <p>Loan amount: <span id="loanValue">KES 1000</span></p>
     <p>Settlement amount: <span id="settlementAmount">KES 1250</span></p>
     <p id="rangeMessage"></p>
@@ -53,16 +53,15 @@
   </footer>
 
   <script>
-    let allowedMax = Math.floor(Math.random() * (10000 - 1500 + 1)) + 1500; // Random max between 1500 and 10000
-
-    document.getElementById("loanRange").max = allowedMax; // Limit slider to user's random max
-
+    // Generate a random max loan limit between KES 1500 and KES 10000
+    let allowedMax = Math.floor(Math.random() * (10000 - 1500 + 1)) + 1500;
+    
     document.getElementById("loanRange").addEventListener('input', function() {
       let value = parseInt(this.value);
       
       if (value > allowedMax) {
         document.getElementById("rangeMessage").textContent = "Your maximum loan limit is KES " + allowedMax;
-        this.value = allowedMax;
+        this.value = allowedMax; // Force back to max
         value = allowedMax;
       } else {
         document.getElementById("rangeMessage").textContent = "";
@@ -86,4 +85,3 @@
   </script>
 </body>
 </html>
-
