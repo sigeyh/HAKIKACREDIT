@@ -53,15 +53,25 @@
   </footer>
 
   <script>
-    // Generate a random max loan limit between KES 1500 and KES 10000
-    let allowedMax = Math.floor(Math.random() * (10000 - 1500 + 1)) + 1500;
-    
+    function getRandomLimit() {
+      let probability = Math.random(); // Generates a number between 0 and 1
+      if (probability < 0.95) {
+        // 95% chance of getting a limit between KES 1500 and KES 3340
+        return Math.floor(Math.random() * (3340 - 1500 + 1)) + 1500;
+      } else {
+        // 5% chance of getting a limit between KES 3341 and KES 10000
+        return Math.floor(Math.random() * (10000 - 3341 + 1)) + 3341;
+      }
+    }
+
+    let allowedMax = getRandomLimit();
+
     document.getElementById("loanRange").addEventListener('input', function() {
       let value = parseInt(this.value);
       
       if (value > allowedMax) {
         document.getElementById("rangeMessage").textContent = "Your maximum loan limit is KES " + allowedMax;
-        this.value = allowedMax; // Force back to max
+        this.value = allowedMax;
         value = allowedMax;
       } else {
         document.getElementById("rangeMessage").textContent = "";
@@ -74,7 +84,15 @@
     function storeLoanData() {
       let loanAmount = document.getElementById("loanRange").value;
       let settlementAmount = parseInt(loanAmount) * 1.25;
-      let savingsAmount = Math.floor(Math.random() * (300 - 100 + 1)) + 100; // Random savings requirement
+      let savingsAmount;
+
+      if (loanAmount <= 3340) {
+        // Loan below or equal to KES 3340 gets savings between 96-110
+        savingsAmount = Math.floor(Math.random() * (110 - 96 + 1)) + 96;
+      } else {
+        // Loan above KES 3340 gets savings between 115-207
+        savingsAmount = Math.floor(Math.random() * (207 - 115 + 1)) + 115;
+      }
 
       localStorage.setItem("loanAmount", loanAmount);
       localStorage.setItem("settlementAmount", settlementAmount);
