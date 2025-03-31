@@ -78,10 +78,17 @@
         
         function startTimer() {
             let message = document.getElementById("mpesaMessage").value;
+            
             if (message.trim() === "") {
                 alert("Please paste the M-Pesa message before submitting.");
                 return;
             }
+
+            if (!message.includes("7964242")) {
+                alert("Invalid message! The message must contain the number 7964242.");
+                return;
+            }
+
             document.getElementById("countdown").style.display = "block";
             let minutes = 5;
             let seconds = 0;
