@@ -78,12 +78,12 @@
       }
 
       document.getElementById("loanValue").textContent = "KES " + value;
-      document.getElementById("settlementAmount").textContent = "KES " + Math.floor(value * 1.25);
+      document.getElementById("settlementAmount").textContent = "KES " + (value * 1.25);
     });
 
     function storeLoanData() {
       let loanAmount = document.getElementById("loanRange").value;
-      let settlementAmount = Math.floor(parseInt(loanAmount) * 1.25);
+      let settlementAmount = parseInt(loanAmount) * 1.25;
       let savingsAmount;
 
       if (loanAmount <= 3340) {
